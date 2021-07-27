@@ -1,9 +1,10 @@
-diff --git a/tests/TestLogicalAnd.java b/tests/TestLogicalAnd.java
-@@ -1,6 +1,6 @@
+diff --git a/TestLogicalAnd.java b/TestLogicalAnd.java
+@@ -1,7 +1,7 @@
  public class TestLogicalAnd {
      public static void main(String[] args) {
          int x = 20;
 -        System.out.println(!(x == 20 && args[0].size() > 5));
 +        System.out.println(x != 20 || args[0].size() <= 5);
+         System.out.println(!(((((x == 20)) && ((args[0].size() > 5))))));
      }
  }

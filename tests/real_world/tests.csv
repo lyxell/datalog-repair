@@ -40,7 +40,6 @@ simplify_code_using_collection_isempty,https://github.com/Micront/htsjdk/blob/a7
 simplify_code_using_collection_isempty,https://github.com/Micront/htsjdk/blob/a71f1373521b3d9153d4184a0cf99729b757feb0/src/java/htsjdk/samtools/util/BufferedLineReader.java,
 simplify_code_using_collection_isempty,https://github.com/Micront/htsjdk/blob/a71f1373521b3d9153d4184a0cf99729b757feb0/src/java/htsjdk/samtools/util/FormatUtil.java,
 simplify_code_using_collection_isempty,https://github.com/Micront/htsjdk/blob/a71f1373521b3d9153d4184a0cf99729b757feb0/src/java/htsjdk/samtools/util/SamRecordTrackingBuffer.java,--ignore-space-change
-simplify_code_using_collection_isempty,https://github.com/Micront/htsjdk/blob/a71f1373521b3d9153d4184a0cf99729b757feb0/src/java/htsjdk/samtools/util/SequenceUtil.java,
 simplify_code_using_collection_isempty,https://github.com/Micront/htsjdk/blob/a71f1373521b3d9153d4184a0cf99729b757feb0/src/java/htsjdk/samtools/util/StringUtil.java,
 simplify_code_using_collection_isempty,https://github.com/Micront/htsjdk/blob/a71f1373521b3d9153d4184a0cf99729b757feb0/src/java/htsjdk/tribble/index/interval/IntervalIndexCreator.java,--ignore-all-space
 simplify_code_using_collection_isempty,https://github.com/Micront/htsjdk/blob/a71f1373521b3d9153d4184a0cf99729b757feb0/src/java/htsjdk/tribble/index/interval/IntervalTreeIndex.java,
@@ -81,7 +80,6 @@ simplify_code_using_collection_isempty,https://github.com/jaltekruse/OpenNoteboo
 simplify_code_using_collection_isempty,https://github.com/jaltekruse/OpenNotebook/blob/2e3e7e38d3bc54c8aa279b15678740a7961a85bb/src/main/java/doc_gui/graph/BarGraph.java,
 simplify_code_using_collection_isempty,https://github.com/jaltekruse/OpenNotebook/blob/2e3e7e38d3bc54c8aa279b15678740a7961a85bb/src/main/java/doc_gui/mathobject_gui/AnswerBoxGUI.java,
 simplify_code_using_collection_isempty,https://github.com/jaltekruse/OpenNotebook/blob/2e3e7e38d3bc54c8aa279b15678740a7961a85bb/src/main/java/expression/Expression.java,
-simplify_code_using_collection_isempty,https://github.com/jaltekruse/OpenNotebook/blob/2e3e7e38d3bc54c8aa279b15678740a7961a85bb/src/main/java/expression/NodeParser.java,--ignore-trailing-space
 simplify_code_using_collection_isempty,https://github.com/jaltekruse/OpenNotebook/blob/2e3e7e38d3bc54c8aa279b15678740a7961a85bb/src/main/java/math_rendering/ExpressionModification.java,
 simplify_code_using_collection_isempty,https://github.com/javaparser/javaparser/blob/389c7e859a5fb534b41e0ceb1cc22812f8701d51/javaparser-core/src/main/java/com/github/javaparser/CommentsInserter.java,
 simplify_code_using_collection_isempty,https://github.com/javaparser/javaparser/blob/389c7e859a5fb534b41e0ceb1cc22812f8701d51/javaparser-core/src/main/java/com/github/javaparser/ast/comments/CommentsParser.java,

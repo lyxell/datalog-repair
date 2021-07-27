@@ -1,0 +1,9 @@
+{
+    "description": "Remove redundant parentheses",
+    "sonar": {
+        "id": "N/A"
+    },
+    "pmd": {
+        "id": "N/A"
+    }
+}

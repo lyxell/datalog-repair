@@ -101,6 +101,7 @@ namespace logifix {
 
         /* Return empty optional if merging failed */
         if (nway::has_conflict(diff)) {
+            std::cerr << "merging failed" << std::endl;
             return {};
         }
 

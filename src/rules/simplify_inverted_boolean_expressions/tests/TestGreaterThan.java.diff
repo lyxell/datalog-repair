@@ -1,9 +1,11 @@
 diff --git a/TestGreaterThan.java b/TestGreaterThan.java
-@@ -1,6 +1,6 @@
+@@ -1,7 +1,7 @@
  public class TestGreaterThan {
      public static void main(String[] args) {
          int x = 20;
 -        System.out.println(!(x > 21));
+-        System.out.println(!(((x > 21))));
++        System.out.println(x <= 21);
 +        System.out.println(x <= 21);
      }
  }

@@ -16,6 +16,7 @@
 #include "rules/remove_empty_statements/implementation.dl"
 #include "rules/remove_empty_try_blocks/implementation.dl"
 #include "rules/remove_redundant_calls_to_close/implementation.dl"
+#include "rules/remove_redundant_parentheses/implementation.dl"
 #include "rules/remove_repeated_unary_operators/implementation.dl"
 #include "rules/remove_unnecessary_calls_to_string_valueof/implementation.dl"
 #include "rules/remove_unnecessary_declarations_above_return_statements/implementation.dl"
@@ -44,7 +45,7 @@
 /* Types
  ********************************/
 
-.type id = [type: symbol, filename: symbol, from: number, to: number]
+.type id = [type: symbol, filename: symbol, content_start: number, content_end: number, from: number, to: number]
 .type id_list = [head: id, tail: id_list]
 
 /* AST nodes
@@ -55,29 +56,35 @@
 .output root(IO=stdout)
 
 .decl ast_node(id: id)
+.output ast_node(IO=stdout)
 ast_node(id) :- root(id).
 ast_node(child) :-
     ast_node(ancestor),
     ancestor_of(ancestor, child).
 
 .decl filename_of(id: id, filename: symbol)
-filename_of([name, fn, A, B], fn) :- ast_node([name, fn, A, B]).
+filename_of([name, fn, cA, cB, A, B], fn) :- ast_node([name, fn, cA, cB, A, B]).
 
 .decl name_of(id: id, name: symbol)
-name_of([name, fn, A, B], name) :- ast_node([name, fn, A, B]).
+name_of([name, fn, cA, cB, A, B], name) :- ast_node([name, fn, cA, cB, A, B]).
+
+.decl content_starts_at(id: id, at: number)
+content_starts_at([name, fn, cA, cB, A, B], cA) :- ast_node([name, fn, cA, cB, A, B]).
+
+.decl content_ends_at(id: id, at: number)
+content_ends_at([name, fn, cA, cB, A, B], cB) :- ast_node([name, fn, cA, cB, A, B]).
 
 .decl starts_at(id: id, at: number)
-starts_at([name, fn, A, B], A) :- ast_node([name, fn, A, B]).
+starts_at([name, fn, cA, cB, A, B], A) :- ast_node([name, fn, cA, cB, A, B]).
 
 .decl ends_at(id: id, at: number)
-ends_at([name, fn, A, B], B) :- ast_node([name, fn, A, B]).
+ends_at([name, fn, cA, cB, A, B], B) :- ast_node([name, fn, cA, cB, A, B]).
 
 /* Javadoc
  ********************************/
 
 .decl javadoc_references(filename: symbol, class: symbol)
 .input javadoc_references
-.output javadoc_references(IO=stdout)
 
 /* AST node relations
  ********************************/
@@ -145,10 +152,10 @@ list_first_element([head, tail], head) :-
 .decl evaluates_to_integer_value(id: id, value: number)
 evaluates_to_integer_value(id, 0) :-
     integer_literal(id),
-    string_representation(id, "0").
+    content_string_representation(id, "0").
 evaluates_to_integer_value(id, 1) :-
     integer_literal(id),
-    string_representation(id, "1").
+    content_string_representation(id, "1").
 /* TODO
 evaluates_to_integer_value(id, to_number(repr)) :-
     integer_literal(id),
@@ -169,9 +176,9 @@ evaluates_to_integer_value(id, left_value - right_value) :-
 
 .decl evaluates_to_boolean_value(id: id, value: number)
 evaluates_to_boolean_value(id, 0) :-
-    string_representation(id, "false").
+    content_string_representation(id, "false").
 evaluates_to_boolean_value(id, 1) :-
-    string_representation(id, "true").
+    content_string_representation(id, "true").
 evaluates_to_boolean_value(id, left_value land right_value) :-
     conditional_and_expression(id, left, right),
     evaluates_to_boolean_value(left, left_value),
@@ -202,6 +209,14 @@ string_representation(id, substr(code, start, end - start)) :-
     filename_of(id, filename),
     starts_at(id, start),
     ends_at(id, end),
+    source_code(filename, code).
+
+.decl content_string_representation(id: id, str: symbol)
+content_string_representation(id, substr(code, start, end - start)) :-
+    ast_node(id),
+    filename_of(id, filename),
+    content_starts_at(id, start),
+    content_ends_at(id, end),
     source_code(filename, code).
 
 .decl string_representation_list(list: id_list, str: symbol)
@@ -313,7 +328,7 @@ expression_name_has_formal_parameter_or_local_var_decl_in_scope(id, decl) :-
         filename_of(id, filename),
     in_scope(start, end, filename, identifier, decl),
     local_variable_declaration(decl, _, _, _),
-    string_representation(head, identifier),
+    content_string_representation(head, identifier),
         expr_start >= start,
         expr_end <= end.
     
@@ -324,7 +339,7 @@ expression_name_has_formal_parameter_or_local_var_decl_in_scope(id, decl) :-
         filename_of(id, filename),
     in_scope(start, end, filename, identifier, decl),
     formal_parameter(decl, _, _, _),
-    string_representation(head, identifier),
+    content_string_representation(head, identifier),
         expr_start >= start,
         expr_end <= end.
 
@@ -335,7 +350,7 @@ expression_name_has_formal_parameter_or_local_var_decl_in_scope(id, decl) :-
         filename_of(id, filename),
     in_scope(start, end, filename, identifier, decl),
     name_of(decl, "resource"),
-    string_representation(head, identifier),
+    content_string_representation(head, identifier),
         expr_start >= start,
         expr_end <= end.
 
@@ -355,7 +370,7 @@ point_of_declaration(head, decl) :-
         ends_at(id, end),
         filename_of(id, filename),
     in_scope(scope_start, scope_end, filename, identifier, decl),
-    string_representation(head, identifier),
+    content_string_representation(head, identifier),
     field_declaration(decl, _, _, _),
         start >= scope_start,
         end <= scope_end,
@@ -370,7 +385,7 @@ point_of_declaration(id, decl) :-
     name_of(this, "this_expression"),
     in_scope(scope_start, scope_end, filename, identifier, decl),
     field_declaration(decl, _, _, _),
-    string_representation(field, identifier),
+    content_string_representation(field, identifier),
         start >= scope_start,
         end <= scope_end.
 
