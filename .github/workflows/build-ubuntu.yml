@@ -45,3 +45,17 @@ jobs:
     - run: chmod +x logifix
     - run: ./logifix --in-place --accept-all spoon/src/main
     - run: cd spoon && mvn compile
+
+  compile-maven:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download logifix
+      uses: actions/download-artifact@v2
+      with:
+        name: logifix-ubuntu
+    - run: git clone --depth 1 https://github.com/apache/maven
+    - run: cd maven && mvn compile
+    - run: chmod +x logifix
+    - run: ./logifix --in-place --accept-all maven/
+    - run: cd maven && mvn compile
