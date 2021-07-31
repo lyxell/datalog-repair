@@ -32,7 +32,8 @@ jobs:
       with:
         name: logifix-ubuntu
         path: ${{github.workspace}}/build/logifix
-  check-for-compile-errors:
+
+  compile-spoon:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -45,3 +46,17 @@ jobs:
     - run: chmod +x logifix
     - run: ./logifix --in-place --accept-all spoon/src/main
     - run: cd spoon && mvn compile
+
+  compile-dbeaver:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download logifix
+      uses: actions/download-artifact@v2
+      with:
+        name: logifix-ubuntu
+    - run: git clone --depth 1 https://github.com/dbeaver/dbeaver
+    - run: cd dbeaver && mvn compile
+    - run: chmod +x logifix
+    - run: ./logifix --in-place --accept-all dbeaver/
+    - run: cd dbeaver && mvn compile
