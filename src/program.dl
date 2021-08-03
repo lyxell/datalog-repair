@@ -239,6 +239,18 @@ string_representation_list(list, substr(code, start, end - start)) :-
         filename_of(last, filename),
     source_code(filename, code).
 
+/* Misc
+ ********************************/
+
+.decl method_invocation_root_subject(meth_inv: id, root: id)
+method_invocation_root_subject(meth_inv, subject) :-
+    method_invocation(meth_inv, subject, _, _),
+    !method_invocation(subject, _, _, _).
+method_invocation_root_subject(meth_inv, subject_root) :-
+    method_invocation(meth_inv, subject, _, _),
+    method_invocation(subject, _, _, _),
+    method_invocation_root_subject(subject, subject_root).
+
 /* Variable scope
  ********************************/
 

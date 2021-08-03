@@ -89,6 +89,20 @@ jobs:
     - run: cd initializr && mvn spring-javaformat:apply
     - run: cd initializr && mvn compile
 
+  compile-spring-framework:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download logifix
+      uses: actions/download-artifact@v2
+      with:
+        name: logifix-ubuntu
+    - run: git clone --depth 1 https://github.com/spring-projects/spring-framework.git
+    - run: cd spring-framework && ./gradlew build -x test
+    - run: chmod +x logifix
+    - run: ./logifix --in-place --accept-all spring-framework/
+    - run: cd spring-framework && ./gradlew build -x test
+
   compile-pitest:
     needs: build
     runs-on: ubuntu-latest

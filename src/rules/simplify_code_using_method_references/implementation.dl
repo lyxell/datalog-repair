@@ -6,6 +6,8 @@ rewrite("simplify_code_using_method_references", filename, start, end, cat(subje
         starts_at(lambda_expr, start),
         ends_at(lambda_expr, end),
     method_invocation(lambda_body, subject, method, [arg, nil]),
+    method_invocation_root_subject(lambda_body, root),
+    !string_representation(root, arg_str),
     string_representation(subject, subject_str),
     string_representation(arg, arg_str),
     string_representation(lambda_param, arg_str).
