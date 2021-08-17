@@ -316,6 +316,10 @@ type_arguments(id, arguments) :-
     name_of(id, "type_arguments"),
     parent_of_list(id, "arguments", arguments).
 
+.decl wildcard(id: id)
+wildcard(id) :-
+    name_of(id, "wildcard").
+
 .decl primitive_type(id: id, annotations: id_list, name: id)
 primitive_type(id, annotations, name) :-
     name_of(id, "primitive_type"),

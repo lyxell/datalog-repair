@@ -1,8 +1,8 @@
 diff --git a/Test.java b/Test.java
-@@ -5,12 +5,7 @@
+@@ -7,21 +7,11 @@
      Map<String, Integer> myMap;
  
-     Integer test(String key) {
+     Integer test1(String key) {
 -        Integer result = myMap.get(key);
 -        if (result == null) {
 -            result = key.length() + 10;
@@ -10,6 +10,16 @@ diff --git a/Test.java b/Test.java
 -        }
 -        return result;
 +        return myMap.computeIfAbsent(key, k -> k.length() + 10);
+     }
+ 
+     public String test2(Class<?> x, String name) {
+-        String str = concurrentMap.get(x);
+-        if (str == null) {
+-            str = "{" + name + ":" + x.getName() + "}";
+-            concurrentMap.put(x, str);
+-        }
+-        return str;
++        return concurrentMap.computeIfAbsent(x, k -> "{" + name + ":" + k.getName() + "}");
      }
  
      public static void main(String[] args) {
