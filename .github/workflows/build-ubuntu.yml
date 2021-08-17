@@ -62,6 +62,20 @@ jobs:
     - run: ./logifix --in-place --accept-all bytecode-viewer/
     - run: cd bytecode-viewer && mvn compile
 
+  compile-spock:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download logifix
+      uses: actions/download-artifact@v2
+      with:
+        name: logifix-ubuntu
+    - run: git clone --depth 1 https://github.com/spockframework/spock.git
+    - run: cd spock && ./gradlew build -x test
+    - run: chmod +x logifix
+    - run: ./logifix --in-place --accept-all spock/
+    - run: cd spock && ./gradlew build -x test
+
   compile-primefaces:
     needs: build
     runs-on: ubuntu-latest
