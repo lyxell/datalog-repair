@@ -34,6 +34,21 @@ jobs:
       with:
         name: logifix-ubuntu
         path: ${{github.workspace}}/build/logifix
+
+  compile-spotbugs:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download logifix
+      uses: actions/download-artifact@v2
+      with:
+        name: logifix-ubuntu
+    - run: git clone --depth 1 https://github.com/spotbugs/spotbugs.git
+    - run: cd spotbugs && ./gradlew build -x test
+    - run: chmod +x logifix
+    - run: ./logifix --in-place --accept-all spotbugs/spotbugs/src/main/java/
+    - run: cd spotbugs && ./gradlew build -x test
+
   check-for-compile-errors:
     needs: build
     runs-on: ubuntu-latest
