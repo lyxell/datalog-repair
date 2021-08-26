@@ -1,34 +1,23 @@
-.decl loop_bounds(filename: symbol, start: number, end: number)
-loop_bounds(filename, start, end) :-
-    for_statement(id, _, _, _, body),
-    filename_of(id, filename),
-    starts_at(body, start),
-    ends_at(body, end).
-loop_bounds(filename, start, end) :-
-    do_statement(id, _, body),
-    filename_of(id, filename),
-    starts_at(body, start),
-    ends_at(body, end).
-loop_bounds(filename, start, end) :-
-    while_statement(id, _, body),
-    filename_of(id, filename),
-    starts_at(body, start),
-    ends_at(body, end).
-loop_bounds(filename, start, end) :-
-    enhanced_for_statement(id, _, _, body),
-    filename_of(id, filename),
-    starts_at(body, start),
-    ends_at(body, end).
+.decl loop(loop: id, body: id)
+loop(id, body) :-
+    for_statement(id, _, _, _, body).
+loop(id, body) :-
+    do_statement(id, _, body).
+loop(id, body) :-
+    while_statement(id, _, body).
+loop(id, body) :-
+    enhanced_for_statement(id, _, _, body).
 
 .decl inside_loop(id: id)
-inside_loop(other_id) :-
-    loop_bounds(filename, start, end),
-    ast_node(other_id),
-        starts_at(other_id, other_start),
-        ends_at(other_id, other_end),
-        filename_of(other_id, filename),
-        other_start >= start,
-        other_end <= end.
+inside_loop(body) :-
+    loop(_, body).
+inside_loop(child) :-
+    inside_loop(id),
+    parent_of(id, _, child).
+inside_loop(child) :-
+    inside_loop(id),
+    parent_of_list(id, _, children),
+    list_contains(children, child).
 
 /* Pre  [:x] = [:y] */
 /* Post             */

@@ -54,7 +54,7 @@ file(GLOB_RECURSE RULE_DATA_FILES src/rules/*.json)
 #### Generate logifix.cpp from Datalog code
 add_custom_command(
   OUTPUT logifix.cpp
-  COMMAND souffle --generate=logifix ${CMAKE_CURRENT_SOURCE_DIR}/src/program.dl
+  COMMAND souffle -PSIPS:strict --generate=logifix ${CMAKE_CURRENT_SOURCE_DIR}/src/program.dl
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/program.dl
   DEPENDS ${RULE_IMPLEMENTATION_FILES}
   VERBATIM)

@@ -42,16 +42,14 @@ rewrite("simplify_code_using_map_computeifabsent", filename, start, end, cat(
     "});"
 )) :-
 
-    predecessor_of(s1, s2),
-    predecessor_of(s2, s3),
-
-    filename_of(s1, filename),
-    starts_at(s1, start),
-    ends_at(s3, end),
-    source_code(filename, code),
-
     /* The first statement is a local variable declaration statement */
     local_variable_declaration_statement(s1, decl),
+    filename_of(s1, filename),
+    starts_at(s1, start),
+    predecessor_of(s1, s2),
+    predecessor_of(s2, s3),
+    ends_at(s3, end),
+    source_code(filename, code),
     local_variable_declaration(decl, _, value_type, [declarator, nil]),
     variable_declarator(declarator, value_var, initializer),
     method_invocation(initializer, map_var, "get", [key_var, nil]),

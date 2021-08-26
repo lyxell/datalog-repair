@@ -96,9 +96,9 @@ in_scope(start, end, filename, identifier_str, param) :-
 
 /* Make local variable declarations accessible in the succeeding statements */
 in_scope(start, end, filename, identifier_str, declaration) :-
-    parent_of_list(id, _, stmts),
-        ends_at(id, end),
-        filename_of(id, filename),
+    block(id, stmts),
+    ends_at(id, end),
+    filename_of(id, filename),
     list_contains(stmts, declaration_statement),
     local_variable_declaration_statement(declaration_statement, declaration),
     local_variable_declaration(declaration, _, _, declarators),
@@ -114,35 +114,35 @@ in_scope(start, end, filename, identifier_str, declaration) :-
 
 .decl expression_name_has_formal_parameter_or_local_var_decl_in_scope(id: id, decl: id)
 expression_name_has_formal_parameter_or_local_var_decl_in_scope(id, decl) :-
-    expression_name(id, [head, _]),
+    local_variable_declaration(decl, _, _, _),
+    in_scope(start, end, _, identifier_string, decl),
+    identifier(head, identifier_string),
+    list_first_element(list, head),
+    expression_name(id, list),
         starts_at(id, expr_start),
         ends_at(id, expr_end),
-        filename_of(id, filename),
-    in_scope(start, end, filename, identifier_string, decl),
-    local_variable_declaration(decl, _, _, _),
-    identifier(head, identifier_string),
         expr_start >= start,
         expr_end <= end.
     
 expression_name_has_formal_parameter_or_local_var_decl_in_scope(id, decl) :-
-    expression_name(id, [head, _]),
+    formal_parameter(decl, _, _, _),
+    in_scope(start, end, _, identifier_string, decl),
+    identifier(head, identifier_string),
+    list_first_element(list, head),
+    expression_name(id, list),
         starts_at(id, expr_start),
         ends_at(id, expr_end),
-        filename_of(id, filename),
-    in_scope(start, end, filename, identifier_string, decl),
-    formal_parameter(decl, _, _, _),
-    identifier(head, identifier_string),
         expr_start >= start,
         expr_end <= end.
 
 expression_name_has_formal_parameter_or_local_var_decl_in_scope(id, decl) :-
-    expression_name(id, [head, _]),
+    name_of(decl, "resource"),
+    in_scope(start, end, _, identifier_string, decl),
+    identifier(head, identifier_string),
+    list_first_element(list, head),
+    expression_name(id, list),
         starts_at(id, expr_start),
         ends_at(id, expr_end),
-        filename_of(id, filename),
-    in_scope(start, end, filename, identifier_string, decl),
-    name_of(decl, "resource"),
-    identifier(head, identifier_string),
         expr_start >= start,
         expr_end <= end.
 
