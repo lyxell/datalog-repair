@@ -49,6 +49,11 @@ std::optional<token_collection> lex(const std::string& content);
 
 int parse(souffle::SouffleProgram* program, const char* filename, const char* content);
 
+inline auto token_to_string(const token& token) -> std::string {
+    const auto& [type, content] = token;
+    return content;
+}
+
 inline std::string token_collection_to_string(const token_collection& tokens) {
     std::string result;
     for (const auto& [type, content] : tokens) {

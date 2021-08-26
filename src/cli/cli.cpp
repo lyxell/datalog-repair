@@ -192,13 +192,56 @@ auto prettify_patch(const std::vector<std::string>& lines) -> std::vector<std::s
     }
     auto result = std::vector<std::string>{};
     const auto* format = "  {0:>{2}} {1}";
-    for (auto& [l, r] : columns) {
-        if (l == "+") {
+    size_t current_column = 0;
+    for (size_t i = 0; i < columns.size(); i++) {
+        auto& [l, r] = columns[i];
+        if (l == "-") {
+            std::string removals;
+            std::string additions;
+            while (i < columns.size() && columns[i].first == "-") {
+                removals += columns[i].second + "\n";
+                i++;
+            }
+            while (i < columns.size() && columns[i].first == "+") {
+                additions += columns[i].second + "\n";
+                i++;
+            }
+            auto removal_tokens = *logifix::parser::lex(removals);
+            auto addition_tokens = *logifix::parser::lex(additions);
+            auto removal_lcs = nway::lcs(removal_tokens, addition_tokens);
+            decltype(removal_lcs) addition_lcs(addition_tokens.size());
+            std::string removals_colorized;
+            std::string additions_colorized;
+            for (size_t i = 0; i < removal_tokens.size(); i++) {
+                if (!removal_lcs[i]) {
+                    removals_colorized +=
+                        fmt::format(fg(fmt::terminal_color::red) | fmt::emphasis::reverse, "{}",
+                                    logifix::parser::token_to_string(removal_tokens[i]));
+                } else {
+                    addition_lcs[*removal_lcs[i]] = i;
+                    removals_colorized +=
+                        fmt::format("{}", logifix::parser::token_to_string(removal_tokens[i]));
+                }
+            }
+            for (size_t i = 0; i < addition_tokens.size(); i++) {
+                if (!addition_lcs[i]) {
+                    additions_colorized +=
+                        fmt::format(fg(fmt::terminal_color::green) | fmt::emphasis::reverse, "{}",
+                                    logifix::parser::token_to_string(addition_tokens[i]));
+                } else {
+                    additions_colorized +=
+                        fmt::format("{}", logifix::parser::token_to_string(addition_tokens[i]));
+                }
+            }
+            for (auto line : utils::line_split(removals_colorized)) {
+                result.emplace_back(fmt::format(format, "-", utils::rtrim(line), left_column_size));
+            }
+            for (auto line : utils::line_split(additions_colorized)) {
+                result.emplace_back(fmt::format(format, "+", utils::rtrim(line), left_column_size));
+            }
+        } else if (l == "+") {
             result.emplace_back(
                 fmt::format(fg(fmt::terminal_color::green), format, l, r, left_column_size));
-        } else if (l == "-") {
-            result.emplace_back(
-                fmt::format(fg(fmt::terminal_color::red), format, l, r, left_column_size));
         } else {
             result.emplace_back(fmt::format(format, l, r, left_column_size));
         }
