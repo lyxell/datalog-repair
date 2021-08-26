@@ -75,7 +75,7 @@ class_body(id, declarations) :-
 
 /**
  * `id`             Id
- * `statements`     Statement
+ * `statements`     [Statement]
  */
 .decl block(id: id, statements: id_list)
 block(id, statements) :-
