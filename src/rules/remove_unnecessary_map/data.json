@@ -1,0 +1,9 @@
+{
+    "description": "Remove unnecessary map",
+    "sonar": {
+        "id": "N/A"
+    },
+    "pmd": {
+        "id": "N/A"
+    }
+}

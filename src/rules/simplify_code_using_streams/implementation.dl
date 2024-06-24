@@ -1,10 +1,11 @@
 /* Pre  for ([:x] : [:original]) {
             if ([:cond]) {
-                [:result].add([:x])
+                [:result].add([:transform])
             }
         }
    Post result.addAll([:original].stream()
                                  .filter(x -> [:cond])
+                                 .map(x -> [:transform])
                                  .collect(java.util.stream.Collectors.toList()));
 */
 
@@ -13,6 +14,8 @@ replace_node_with_fragment("simplify_code_using_streams", id, cat(
                                                 ".stream()",
                                                 ".filter(", @node_to_string(code, declarator_id), " -> ",
                                                     @node_to_string(code, cond), ")",
+                                                ".map(", @node_to_string(code, declarator_id), " -> ",
+                                                    @node_to_string(code, transform), ")",
                                                 ".collect(java.util.stream.Collectors.toList()));"
 )) :-
     enhanced_for_statement(id, param, original, body),
@@ -23,14 +26,12 @@ replace_node_with_fragment("simplify_code_using_streams", id, cat(
     has_type(original, [original_type_package, original_type_name, type_args]),
     type_args != nil,
     collection_type(original_type_package, original_type_name),
-
     source_code(_, code),
     formal_parameter(param, nil, _, declarator_id),
     block(body, [if_stmt, nil]),
     if_statement(if_stmt, cond, then, nil),
     block(then, [expr_stmt, nil]),
     expression_statement(expr_stmt, invocation),
-    method_invocation(invocation, subject, "add", [x, nil]),
+    method_invocation(invocation, subject, "add", [transform, nil]),
     has_type(subject, [subject_type_package, subject_type_name, _]),
-    collection_type(subject_type_package, subject_type_name),
-    point_of_declaration(x, param).
+    collection_type(subject_type_package, subject_type_name).

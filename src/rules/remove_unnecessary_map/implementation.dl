@@ -1,0 +1,6 @@
+replace_node_with_node("remove_unnecessary_map", invocation, subject) :-
+    method_invocation(invocation, subject, "map", [lambda, nil]),
+    has_type(subject, ["java.util.stream", "Stream", _]),
+    lambda_expression(lambda, params, body),
+    lambda_params(params, [param, nil]),
+    point_of_declaration(body, param).

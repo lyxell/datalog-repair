@@ -1,0 +1,22 @@
+diff --git a/TestInstanceOf.java b/TestInstanceOf.java
+@@ -1,5 +1,6 @@
+ import java.util.ArrayList;
+ import java.util.List;
++import java.util.stream.Collectors;
+ 
+ public class TestInstanceOf {
+     public static void main(String[] args) {
+@@ -8,12 +9,7 @@
+         original.add(2);
+         original.add(3);
+         original.add(4);
+-        List<Integer> result = new ArrayList<>();
+-        for (Integer x : original) {
+-            if (x < 2) {
+-                result.add(x + 3);
+-            }
+-        }
++        List<Integer> result = original.stream().filter(x -> x < 2).map(x -> x + 3).collect(Collectors.toList());
+         System.out.println(result);
+     }
+ }
